@@ -38,4 +38,9 @@ public class Health : MonoBehaviour
 		}
 	}
 
+	public void Respawn()
+	{
+		currentHealth = maxHealth; 
+	}
+
 }
