@@ -25,8 +25,14 @@ public class Health : MonoBehaviour
 		currentHealth -= amount;
 		if (currentHealth <= 0)
 		{
-			Destroy(gameObject);
+			Kill();
 		}
+	}
+
+	public void Kill()
+	{
+		Fill.fillAmount = 0;
+		Destroy(gameObject);
 	}
 
 	public void Heal(int amount)
