@@ -12,19 +12,22 @@ public class Shooting : MonoBehaviour
 	private float timer;
 	public float timerbetweenfiring;
 
+	float rotZ;
+
 	void Start()
 	{
-		mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+		mainCam = FindAnyObjectByType<Camera>();
 	}
 
 	void Update()
 	{
 		mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 		Vector3 rotation = mousePos - transform.position;
-		float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+		rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+
 		transform.rotation = Quaternion.Euler(0, 0, rotZ);
 
-		if(!canfire)
+		if (!canfire)
 		{
 			timer += Time.deltaTime;
 			if(timer > timerbetweenfiring)
@@ -34,12 +37,16 @@ public class Shooting : MonoBehaviour
 
 			}
 		}
+	}
 
-		if(Input.GetMouseButton(0) && canfire)
+
+	public void Shoot()
+	{
+		if (canfire)
 		{
+			GameObject bullet = Instantiate(Bullet, BulletTransform.position, Quaternion.identity);
+			bullet.GetComponent<BulletScript>().Init(rotZ);
 			canfire = false;
-			Instantiate(Bullet, BulletTransform.position, Quaternion.identity);
 		}
-
 	}
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 	[SerializeField] int damage;
-	[SerializeField] Health Health;
 	[SerializeField] float maxHealth = 100;
 	[SerializeField] float currentHealth;
 
@@ -19,7 +18,7 @@ public class Enemy : MonoBehaviour
 		currentHealth -= amount;
 		if (currentHealth <= 0)
 		{
-			Destroy(gameObject);
+			Destroy(this.gameObject);
 		}
 	}
 
@@ -27,7 +26,11 @@ public class Enemy : MonoBehaviour
 	{
 		if(collision.gameObject.tag == "Player")
 		{
-			Health.TakeDamage(damage); 
+			Health health = collision.transform.GetComponent<Health>();
+            if (health != null)
+            {
+				health.TakeDamage(damage); 
+            }
 		}
 	}
 

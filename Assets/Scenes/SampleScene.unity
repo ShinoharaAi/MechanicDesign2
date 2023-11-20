@@ -718,7 +718,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 467373601}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 537735ee0c1cea44893c26770da9038a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -777,7 +777,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 2
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -794,6 +794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlayerInput: {fileID: 467373608}
+  shooter: {fileID: 736788367}
   m_b_InJumpActive: 0
   m_b_InMoveActive: 0
 --- !u!114 &467373607
@@ -809,7 +810,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_f_MoveSpeed: 10
-  m_f_JumpForce: 10
+  m_f_JumpForce: 40
   m_f_CastPosition: {fileID: 0}
   m_f_CircleRadius: 0
   m_LayerMask:
@@ -1968,7 +1969,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1211110988}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03a424151f2d85b438b0bba997b74727, type: 3}
   m_Name: 
@@ -2281,7 +2282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 50
-  Health: {fileID: 467373610}
   maxHealth: 100
   currentHealth: 100
 --- !u!212 &1632825095
@@ -2818,7 +2818,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 50
-  Health: {fileID: 467373610}
   maxHealth: 100
   currentHealth: 100
 --- !u!50 &2121017876
@@ -2835,7 +2834,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.5
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:

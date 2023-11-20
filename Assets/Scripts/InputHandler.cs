@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] PlayerInput m_PlayerInput;
+	[SerializeField] Shooting shooter; 
 
     public bool m_b_InJumpActive;
     public bool m_b_InMoveActive;
@@ -32,6 +33,7 @@ public class InputHandler : MonoBehaviour
         m_PlayerInput.actions.FindAction("Jump").performed += Handle_JumpPerformed;
         m_PlayerInput.actions.FindAction("Jump").canceled += Handle_JumpCancelled;
 
+        m_PlayerInput.actions.FindAction("Shoot").performed += Handle_ShootPerformed;
     }
 
     private void OnDisable()
@@ -42,6 +44,7 @@ public class InputHandler : MonoBehaviour
         m_PlayerInput.actions.FindAction("Jump").performed -= Handle_JumpPerformed;
         m_PlayerInput.actions.FindAction("Jump").canceled -= Handle_JumpCancelled;
 
+        m_PlayerInput.actions.FindAction("Shoot").performed -= Handle_ShootPerformed;
     }
 
     private void Handle_MovePerformed(InputAction.CallbackContext context)
@@ -69,13 +72,24 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void Handle_JumpPerformed(InputAction.CallbackContext context)
+	private void Handle_ShootPerformed(InputAction.CallbackContext context)
+	{
+		shooter.Shoot();
+		PlayerMovement.Move(m_f_InMoveRequest);
+		if (c_RMove == null)
+		{
+			c_RMove = StartCoroutine(C_MoveUpdate());
+		}
+	}
+
+
+	private void Handle_JumpPerformed(InputAction.CallbackContext context)
     {
         m_b_InJumpActive = true;
         PlayerMovement.PlayerJump();
 
 		//Hold down jump button = full height
-		PlayerMovement.m_rb.velocity = new Vector2(PlayerMovement.m_rb.velocity.x, PlayerMovement.m_f_JumpForce);
+		//PlayerMovement.m_rb.velocity = new Vector2(PlayerMovement.m_rb.velocity.x, PlayerMovement.m_f_JumpForce);
     }
 
     private void Handle_JumpCancelled(InputAction.CallbackContext context)
@@ -84,7 +98,7 @@ public class InputHandler : MonoBehaviour
 		PlayerMovement.isJumping = false;
 
 		//Light tap of Jump button = half of jump
-		PlayerMovement.m_rb.velocity = new Vector2(PlayerMovement.m_rb.velocity.x, PlayerMovement.m_rb.velocity.y * 0.5f);
+		//PlayerMovement.m_rb.velocity = new Vector2(PlayerMovement.m_rb.velocity.x, PlayerMovement.m_rb.velocity.y * 0.5f);
 	}
 
 	IEnumerator C_MoveUpdate()

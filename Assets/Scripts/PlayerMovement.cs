@@ -16,11 +16,6 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] float maxFallSpeed = 18f;
 	[SerializeField] float fallSpeedMultiplier = 2f; 
 
-	float minvspeed = -50f;
-	float maxvspeed = 50f;
-	float minxspeed = -50f;
-	float maxxspeed = 50f;
-
 	private float FallApex = 2.5f;
 	//private float LowApex = 2f;
 
@@ -49,27 +44,8 @@ public class PlayerMovement : MonoBehaviour
 		GroundedScr = GetComponent<Grounded>();
 	}
 
-	public void Update()
+	public void FixedUpdate()
 	{
-		if (m_rb.velocity.y >= maxvspeed)
-		{
-			m_rb.velocity = new Vector2(m_rb.velocity.x, maxvspeed);
-		}
-		if (m_rb.velocity.y <= minvspeed)
-		{
-			m_rb.velocity = new Vector2(m_rb.velocity.x, minvspeed);
-		}
-
-		if (m_rb.velocity.x >= maxxspeed)
-		{
-			m_rb.velocity = new Vector2(m_rb.velocity.y, maxxspeed);
-		}
-
-		if (m_rb.velocity.x <= minxspeed)
-		{
-			m_rb.velocity = new Vector2(m_rb.velocity.y, minxspeed);
-		}
-
 		if (m_rb.velocity.y < 0)
 		{
 			m_rb.velocity += Vector2.up * Physics2D.gravity.y * (FallApex - 1) * Time.deltaTime;
@@ -101,10 +77,10 @@ public class PlayerMovement : MonoBehaviour
 		GroundedScr.OnGroundedChanged -= Handle_GroundedChanged;
 	}
 
-	void FixedUpdate()
-	{
-		//isGrounded = Physics2D.CircleCast(m_CastPosition.position, m_f_CircleRadius, Vector2.zero, 0, m_LayerMask);
-	}
+	//void FixedUpdate()
+	//{
+	//	//isGrounded = Physics2D.CircleCast(m_CastPosition.position, m_f_CircleRadius, Vector2.zero, 0, m_LayerMask);
+	//}
 
 	public void PlayerJump()
 	{
