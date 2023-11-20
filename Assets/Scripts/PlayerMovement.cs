@@ -12,9 +12,10 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] Transform m_f_CastPosition;
 	[SerializeField] float m_f_CircleRadius;
 	[SerializeField] LayerMask m_LayerMask;
-	[SerializeField] float baseGravity = 2f;
-	[SerializeField] float maxFallSpeed = 18f;
-	[SerializeField] float fallSpeedMultiplier = 2f; 
+	[SerializeField] float dashingPower = 24f;
+	[SerializeField] float dashingTime = 0.2f;
+	[SerializeField] float dashingCooldown = 1f;
+
 
 	private float FallApex = 2.5f;
 	//private float LowApex = 2f;
@@ -23,8 +24,10 @@ public class PlayerMovement : MonoBehaviour
 	float jumpStartTime;
 
 	Grounded GroundedScr;
-	InputHandler InputHandlerScr; 
+	InputHandler InputHandlerScr;
 
+	private bool canDash = true;
+	private bool isDashing;
 	public bool isJumping; 
 	bool m_bRecentJump;
 	bool m_bJumpBuffering;
@@ -46,24 +49,10 @@ public class PlayerMovement : MonoBehaviour
 
 	public void FixedUpdate()
 	{
+
 		if (m_rb.velocity.y < 0)
 		{
 			m_rb.velocity += Vector2.up * Physics2D.gravity.y * (FallApex - 1) * Time.deltaTime;
-		}
-
-		Gravity();
-	}
-
-	private void Gravity()
-	{
-		if(m_rb.velocity.y < 0)
-		{
-			m_rb.gravityScale = baseGravity * fallSpeedMultiplier;
-			m_rb.velocity = new Vector2(m_rb.velocity.x, Mathf.Max(m_rb.velocity.y, -maxFallSpeed));
-		}
-		else
-		{
-			m_rb.gravityScale = baseGravity;
 		}
 	}
 
@@ -141,10 +130,16 @@ public class PlayerMovement : MonoBehaviour
 		Debug.Log($"Launching from : {m_rb.velocity.y}");
 	}
 
+	public void Dasher()
+	{
+		StartCoroutine(Dash()); 
+	}
+
 	public void Move(float moveRequest)
 	{
 		m_f_MoveRequest = moveRequest;
 		m_rb.velocity = new Vector2(m_f_MoveRequest * m_f_MoveSpeed, m_rb.velocity.y);
+		//m_rb.AddForce(transform.right * m_f_MoveRequest * m_f_MoveSpeed * 0.1f, ForceMode2D.Impulse); 
 	}
 
 	IEnumerator CR_CoyoteTime()
@@ -166,5 +161,19 @@ public class PlayerMovement : MonoBehaviour
 		m_bRecentJump = true;
 		yield return new WaitForSeconds(0.1f);
 		m_bRecentJump = false;
+	}
+
+	IEnumerator Dash()
+	{
+		canDash = false;
+		isDashing = true;
+		float originalGravity = m_rb.gravityScale;
+		m_rb.gravityScale = 0f;
+		m_rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
+		yield return new WaitForSeconds(dashingTime);
+		m_rb.gravityScale = originalGravity;
+		isDashing = false;
+		yield return new WaitForSeconds(dashingCooldown);
+		canDash = true;
 	}
 }

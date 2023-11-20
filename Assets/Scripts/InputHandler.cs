@@ -11,11 +11,17 @@ public class InputHandler : MonoBehaviour
     public bool m_b_InJumpActive;
     public bool m_b_InMoveActive;
 	private float m_f_InMoveRequest;
+	public bool m_b_InSlideActive;
 
-    Rigidbody2D rb;
+	public Animator animator; 
+
+
+	Rigidbody2D rb;
 
     public Coroutine c_RMove;
+	public Coroutine c_RJump;
 
+	Ghost ghost; 
     PlayerMovement PlayerMovement;
 
     private void Awake()
@@ -34,9 +40,18 @@ public class InputHandler : MonoBehaviour
         m_PlayerInput.actions.FindAction("Jump").canceled += Handle_JumpCancelled;
 
         m_PlayerInput.actions.FindAction("Shoot").performed += Handle_ShootPerformed;
-    }
+		m_PlayerInput.actions.FindAction("Shoot").canceled += Handle_ShootCancelled;
 
-    private void OnDisable()
+		m_PlayerInput.actions.FindAction("Dash").performed += Handle_DashPerformed;
+		//m_PlayerInput.actions.FindAction("Dash").canceled += Handle_DashCancelled;
+
+		m_PlayerInput.actions.FindAction("Slide").performed += Handle_SlidePerformed;
+		m_PlayerInput.actions.FindAction("Slide").canceled += Handle_SlideCancelled;
+
+
+	}
+
+	private void OnDisable()
     {
         m_PlayerInput.actions.FindAction("Movement").performed -= Handle_MovePerformed;
         m_PlayerInput.actions.FindAction("Movement").canceled -= Handle_MoveCancelled;
@@ -45,9 +60,17 @@ public class InputHandler : MonoBehaviour
         m_PlayerInput.actions.FindAction("Jump").canceled -= Handle_JumpCancelled;
 
         m_PlayerInput.actions.FindAction("Shoot").performed -= Handle_ShootPerformed;
-    }
+		m_PlayerInput.actions.FindAction("Shoot").canceled -= Handle_ShootCancelled;
 
-    private void Handle_MovePerformed(InputAction.CallbackContext context)
+		m_PlayerInput.actions.FindAction("Dash").performed -= Handle_DashPerformed;
+		//m_PlayerInput.actions.FindAction("Dash").canceled -= Handle_DashCancelled;
+
+		m_PlayerInput.actions.FindAction("Slide").performed -= Handle_SlidePerformed;
+		m_PlayerInput.actions.FindAction("Slide").canceled -= Handle_SlideCancelled;
+
+	}
+
+	private void Handle_MovePerformed(InputAction.CallbackContext context)
     {
         m_b_InMoveActive = true;
 		m_f_InMoveRequest = context.ReadValue<float>();
@@ -57,48 +80,78 @@ public class InputHandler : MonoBehaviour
         {
             c_RMove = StartCoroutine(C_MoveUpdate());
         }
-    }
+
+		ghost.makeGhost = true;
+		animator.SetBool("Moving", true);
+	}
 
     private void Handle_MoveCancelled(InputAction.CallbackContext context)
     {
         m_b_InMoveActive = false;
 		m_f_InMoveRequest = 0f;
 
-		PlayerMovement.Move(m_f_InMoveRequest);
 		if (c_RMove != null)
         {
             StopCoroutine(c_RMove);
             c_RMove = null;
         }
-    }
+
+		PlayerMovement.Move(m_f_InMoveRequest);
+
+		ghost.makeGhost = false;
+		animator.SetBool("Moving", false);
+	}
+
+	private void Handle_SlidePerformed(InputAction.CallbackContext context)
+	{
+		m_b_InSlideActive = true; 
+	}
+
+	private void Handle_SlideCancelled(InputAction.CallbackContext context)
+	{
+		m_b_InSlideActive = false;
+	}
 
 	private void Handle_ShootPerformed(InputAction.CallbackContext context)
 	{
+		shooter.isShooting = true;
 		shooter.Shoot();
-		PlayerMovement.Move(m_f_InMoveRequest);
-		if (c_RMove == null)
-		{
-			c_RMove = StartCoroutine(C_MoveUpdate());
-		}
 	}
+
+	private void Handle_ShootCancelled(InputAction.CallbackContext context)
+	{
+		shooter.isShooting = false;
+	}
+
 
 
 	private void Handle_JumpPerformed(InputAction.CallbackContext context)
     {
         m_b_InJumpActive = true;
-        PlayerMovement.PlayerJump();
-
-		//Hold down jump button = full height
-		//PlayerMovement.m_rb.velocity = new Vector2(PlayerMovement.m_rb.velocity.x, PlayerMovement.m_f_JumpForce);
+	    rb.gravityScale = 0.75f;
+		if (c_RJump == null)
+		{
+			c_RJump = StartCoroutine(C_JumpUpdate());	
+		}
     }
 
     private void Handle_JumpCancelled(InputAction.CallbackContext context)
     {
         m_b_InJumpActive = false;
 		PlayerMovement.isJumping = false;
+		rb.gravityScale = 5f;
+		if(c_RJump != null)
+		{
+			StopCoroutine(c_RJump); 
+			c_RJump = null;	
+		}
 
-		//Light tap of Jump button = half of jump
-		//PlayerMovement.m_rb.velocity = new Vector2(PlayerMovement.m_rb.velocity.x, PlayerMovement.m_rb.velocity.y * 0.5f);
+	}
+
+	private void Handle_DashPerformed(InputAction.CallbackContext context)
+	{
+		PlayerMovement.Dasher();
+		//PlayerMovement.Flip();
 	}
 
 	IEnumerator C_MoveUpdate()
@@ -106,7 +159,13 @@ public class InputHandler : MonoBehaviour
         while (m_b_InMoveActive)
         {
             PlayerMovement.Move(m_f_InMoveRequest);
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
+
+	IEnumerator C_JumpUpdate()
+	{
+		PlayerMovement.PlayerJump();
+		yield return null;
+	}
 }

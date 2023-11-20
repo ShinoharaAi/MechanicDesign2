@@ -22,7 +22,7 @@ public class PlayerRespawn : MonoBehaviour
 		//Camera.main.GetComponent<Camera>().MoveToNewRoom(currentCheckpoint.parent);
 	}
 
-	private void OnTriggerEnter(Collider2D collision)
+	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		currentCheckpoint = collision.transform;
 		collision.GetComponent<Collider>().enabled = false;

@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
-	private Camera mainCam;
-	private Vector3 mousePos;
-	public GameObject Bullet;
-	public Transform BulletTransform;
 	public bool canfire;
-	private float timer;
+	public bool isShooting;
 	public float timerbetweenfiring;
 
-	float rotZ;
+	private float timer;
+	private float rotZ;
+	private Vector3 mousePos;
 
-	void Start()
+	private Camera mainCam;
+	public GameObject Bullet;
+	public Transform BulletTransform;
+	Coroutine c_RBulletDisappear;
+
+	void Awake()
 	{
 		mainCam = FindAnyObjectByType<Camera>();
 	}
@@ -38,7 +41,6 @@ public class Shooting : MonoBehaviour
 			}
 		}
 	}
-
 
 	public void Shoot()
 	{

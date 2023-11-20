@@ -31,8 +31,16 @@ public class BulletScript : MonoBehaviour
             if (enemy != null)
             {
 				enemy.GetComponent<Enemy>().TakeDamage(damage);
-				
 			}
 		}
+
+		StartCoroutine(C_BulletDisappear());
+	}
+
+
+	IEnumerator C_BulletDisappear()
+	{
+		yield return new WaitForSeconds(1f);
+		Destroy(gameObject);
 	}
 }

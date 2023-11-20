@@ -4,45 +4,29 @@ using UnityEngine;
 
 public class RelaxedSemiSolid : MonoBehaviour
 {
-	private Collider2D p_collider;
-	private bool p_platform;
+	private BoxCollider2D m_collider;
+	private bool playerOnPlatform;
 
-    void Start()
-    {
-        p_collider = GetComponent<Collider2D>();
-    }
+	InputHandler InputHandlerScr;
 
-	private void Update()
+	private void Awake()
 	{
-		if (p_platform && Input.GetAxisRaw("Vertical") < 0);
-		{
-			p_collider.enabled = false;
-			StartCoroutine(EnableCollider()); 
-		}
+		m_collider = GetComponent<BoxCollider2D>();
+		InputHandlerScr = GameObject.FindGameObjectWithTag("Player").GetComponent<InputHandler>();
 	}
+
+	private void OnCollisionStay2D(Collision2D collision)
+	{
+        if(InputHandlerScr.m_b_InSlideActive == true)
+        {
+			StartCoroutine(EnableCollider());
+        }
+    }
 
 	private IEnumerator EnableCollider()
 	{
-		yield return new WaitForSeconds(0.5f);
-		p_collider.enabled = true;
-	}
-
-	private void SetPlayerOnPlatform(Collision2D other, bool value)
-	{
-		var player = other.gameObject.GetComponent<PlayerMovement>();
-		if (player != null)
-		{
-			p_platform = value;
-		}
-	}
-
-	private void OnCollisionEnter2D(Collision2D other)
-	{
-		SetPlayerOnPlatform(other, true);
-	}
-
-	private void OnCollisionExit2D(Collision2D other)
-	{
-		SetPlayerOnPlatform(other, true);
+		m_collider.enabled = false;
+		yield return new WaitForSeconds(1f);
+		m_collider.enabled = true;
 	}
 }
