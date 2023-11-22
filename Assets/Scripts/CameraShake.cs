@@ -5,51 +5,55 @@ using Cinemachine;
 
 public class CameraShake : MonoBehaviour
 {
-	private CinemachineVirtualCamera CinemachineVirtualCamera;
-	[SerializeField] private float ShakeIntensity = 10f;
-	[SerializeField] private float ShakeTime = 0.5f;
-	[SerializeField] private float timer;
-	private CinemachineBasicMultiChannelPerlin _cbmcp;
+    private CinemachineVirtualCamera CinemachineVirtualCamera;
+    [SerializeField] private float ShakeIntensity = 10f;
+    [SerializeField] private float ShakeTime = 0.5f;
+    [SerializeField] private float timer;
+    private CinemachineBasicMultiChannelPerlin _cbmcp;
 
-	private void Awake()
-	{
-		CinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();	
-	}
+    public static CameraShake instance { get; private set; }
 
-	private void Start()
-	{
-		StopShake();
-	}
+    private void Awake()
+    {
+        CinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
+        instance = this; 
+    }
 
-	public void ShakeCamera()
-	{
-		CinemachineBasicMultiChannelPerlin _cbmcp = CinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-		_cbmcp.m_AmplitudeGain = ShakeIntensity;
+    private void Start()
+    {
+        StopShake();
+    }
 
-		timer = ShakeTime;
-	}
+    public void ShakeCamera()
+    {
+        CinemachineBasicMultiChannelPerlin _cbmcp = CinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        _cbmcp.m_AmplitudeGain = ShakeIntensity;
 
-	void StopShake()
-	{
-		CinemachineBasicMultiChannelPerlin _cbmcp = CinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-		_cbmcp.m_AmplitudeGain = 0f;
-		timer = 0;
-	}
+        timer = ShakeTime;
+    }
 
-	private void Update()
-	{
-		if(Input.GetKey(KeyCode.Space))
-		{
-			ShakeCamera();
-		}
+    void StopShake()
+    {
+        CinemachineBasicMultiChannelPerlin _cbmcp = CinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        _cbmcp.m_AmplitudeGain = 0f;
+        timer = 0;
+    }
 
-		if(timer >0)
-		{
-			timer -= Time.deltaTime;
-			if(timer < 0)
-			{
-				StopShake(); 
-			}
-		}
-	}
+    private void Update()
+    {
+        //if (Input.GetKey(KeyCode.Space))
+        //{
+        //    ShakeCamera();
+        //}
+
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            if (timer < 0)
+            {
+                StopShake();
+            }
+        }
+    }
+
 }

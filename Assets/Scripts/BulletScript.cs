@@ -31,8 +31,10 @@ public class BulletScript : MonoBehaviour
             if (enemy != null)
             {
 				enemy.GetComponent<Enemy>().TakeDamage(damage);
-			}
-		}
+                CameraShake.instance.ShakeCamera();
+
+            }
+        }
 
 		StartCoroutine(C_BulletDisappear());
 	}

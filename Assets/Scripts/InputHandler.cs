@@ -23,6 +23,7 @@ public class InputHandler : MonoBehaviour
 
 	Ghost ghost; 
     PlayerMovement PlayerMovement;
+	SlowMotion Slowdowning; 
 
     private void Awake()
     {
@@ -48,8 +49,10 @@ public class InputHandler : MonoBehaviour
 		m_PlayerInput.actions.FindAction("Slide").performed += Handle_SlidePerformed;
 		m_PlayerInput.actions.FindAction("Slide").canceled += Handle_SlideCancelled;
 
+        m_PlayerInput.actions.FindAction("SlowMotion").performed += Handle_SlowMotionPerformed;
+        //m_PlayerInput.actions.FindAction("SlowMotion").canceled += Handle_SlowMotionCancelled;
 
-	}
+    }
 
 	private void OnDisable()
     {
@@ -68,7 +71,10 @@ public class InputHandler : MonoBehaviour
 		m_PlayerInput.actions.FindAction("Slide").performed -= Handle_SlidePerformed;
 		m_PlayerInput.actions.FindAction("Slide").canceled -= Handle_SlideCancelled;
 
-	}
+
+		m_PlayerInput.actions.FindAction("SlowMotion").performed -= Handle_SlowMotionPerformed;
+		//m_PlayerInput.actions.FindAction("SlowMotion").canceled -= Handle_SlowMotionCancelled;
+    }
 
 	private void Handle_MovePerformed(InputAction.CallbackContext context)
     {
@@ -122,10 +128,18 @@ public class InputHandler : MonoBehaviour
 	{
 		shooter.isShooting = false;
 	}
+    private void Handle_SlowMotionPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log("slow");
+        Slowdowning.DoSlowmotion();
+    }
 
+    //private void Handle_SlowMotionCancelled(InputAction.CallbackContext context)
+    //{
+    //    Slowdowning.DoSlowmotion(false);
+    //}
 
-
-	private void Handle_JumpPerformed(InputAction.CallbackContext context)
+    private void Handle_JumpPerformed(InputAction.CallbackContext context)
     {
         m_b_InJumpActive = true;
 	    rb.gravityScale = 0.75f;
