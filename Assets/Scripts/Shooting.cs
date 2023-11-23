@@ -32,7 +32,7 @@ public class Shooting : MonoBehaviour
 
 		if (!canfire)
 		{
-			timer += Time.deltaTime;
+			timer += Time.unscaledDeltaTime;
 			if(timer > timerbetweenfiring)
 			{
 				canfire = true;

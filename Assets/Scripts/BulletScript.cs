@@ -20,10 +20,10 @@ public class BulletScript : MonoBehaviour
 
 		transform.rotation = Quaternion.Euler(0,0, rot - 90);
 
-		rb.AddForce(transform.up * force, ForceMode2D.Impulse);
+		rb.AddForce(transform.up * force/Time.timeScale, ForceMode2D.Impulse);
 	}
 
-	private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
 	{
 		if (collision.gameObject.tag == "Enemy")
 		{

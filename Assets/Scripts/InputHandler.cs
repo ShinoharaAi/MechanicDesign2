@@ -20,10 +20,10 @@ public class InputHandler : MonoBehaviour
 
     public Coroutine c_RMove;
 	public Coroutine c_RJump;
+    public Coroutine c_RSlomo;
 
 	Ghost ghost; 
     PlayerMovement PlayerMovement;
-	SlowMotion Slowdowning; 
 
     private void Awake()
     {
@@ -50,7 +50,7 @@ public class InputHandler : MonoBehaviour
 		m_PlayerInput.actions.FindAction("Slide").canceled += Handle_SlideCancelled;
 
         m_PlayerInput.actions.FindAction("SlowMotion").performed += Handle_SlowMotionPerformed;
-        //m_PlayerInput.actions.FindAction("SlowMotion").canceled += Handle_SlowMotionCancelled;
+        m_PlayerInput.actions.FindAction("SlowMotion").canceled += Handle_SlowMotionCancelled;
 
     }
 
@@ -66,14 +66,14 @@ public class InputHandler : MonoBehaviour
 		m_PlayerInput.actions.FindAction("Shoot").canceled -= Handle_ShootCancelled;
 
 		m_PlayerInput.actions.FindAction("Dash").performed -= Handle_DashPerformed;
-		//m_PlayerInput.actions.FindAction("Dash").canceled -= Handle_DashCancelled;
+        //m_PlayerInput.actions.FindAction("Dash").canceled -= Handle_DashCancelled;
 
-		m_PlayerInput.actions.FindAction("Slide").performed -= Handle_SlidePerformed;
+        m_PlayerInput.actions.FindAction("Slide").performed -= Handle_SlidePerformed;
 		m_PlayerInput.actions.FindAction("Slide").canceled -= Handle_SlideCancelled;
 
 
 		m_PlayerInput.actions.FindAction("SlowMotion").performed -= Handle_SlowMotionPerformed;
-		//m_PlayerInput.actions.FindAction("SlowMotion").canceled -= Handle_SlowMotionCancelled;
+        m_PlayerInput.actions.FindAction("SlowMotion").canceled -= Handle_SlowMotionCancelled;
     }
 
 	private void Handle_MovePerformed(InputAction.CallbackContext context)
@@ -130,14 +130,22 @@ public class InputHandler : MonoBehaviour
 	}
     private void Handle_SlowMotionPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log("slow");
-        Slowdowning.DoSlowmotion();
+        Debug.Log("slowmo STARTED");
+        if (c_RSlomo == null)
+        {
+            c_RSlomo = StartCoroutine(C_SlowMotion());
+        }
     }
 
-    //private void Handle_SlowMotionCancelled(InputAction.CallbackContext context)
-    //{
-    //    Slowdowning.DoSlowmotion(false);
-    //}
+    private void Handle_SlowMotionCancelled(InputAction.CallbackContext context)
+    {
+        if (c_RSlomo != null)
+        {
+            StopCoroutine(C_SlowMotion());
+            c_RSlomo = null;
+            Debug.Log("Slowo CR stopped");
+        }
+    }
 
     private void Handle_JumpPerformed(InputAction.CallbackContext context)
     {
@@ -173,7 +181,7 @@ public class InputHandler : MonoBehaviour
         while (m_b_InMoveActive)
         {
             PlayerMovement.Move(m_f_InMoveRequest);
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
     }
 
@@ -182,4 +190,11 @@ public class InputHandler : MonoBehaviour
 		PlayerMovement.PlayerJump();
 		yield return null;
 	}
+
+    IEnumerator C_SlowMotion()
+    {
+        Time.timeScale = 0.5f;
+        yield return new WaitForSeconds(2f);
+        Time.timeScale = 1.0f;
+    }
 }

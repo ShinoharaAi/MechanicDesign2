@@ -139,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		m_f_MoveRequest = moveRequest;
 		m_rb.velocity = new Vector2(m_f_MoveRequest * m_f_MoveSpeed, m_rb.velocity.y);
-		//m_rb.AddForce(transform.right * m_f_MoveRequest * m_f_MoveSpeed * 0.1f, ForceMode2D.Impulse); 
+		m_rb.AddForce(transform.right * m_f_MoveRequest * m_f_MoveSpeed * 0.1f, ForceMode2D.Impulse); 
 	}
 
 	IEnumerator CR_CoyoteTime()

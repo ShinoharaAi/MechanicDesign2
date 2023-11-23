@@ -5,36 +5,49 @@ using UnityEngine;
 public class EnemyBullet : MonoBehaviour
 {
 	[SerializeField] float speed;
-	[SerializeField] float lineOfSite;
-	[SerializeField] float shootingRange;
-	[SerializeField] GameObject Bullet;
-	[SerializeField] GameObject bulletParent;
-	private Transform player;
+    [SerializeField] int damage;
+    private Transform player;
+	private Vector2 target;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
+		target = new Vector2(player.position.x, player.position.y);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        float distancefromplayer = Vector2.Distance(player.position, transform.position);
-		if(distancefromplayer < lineOfSite)
+        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+		if(transform.position.x == target.x && transform.position.y == target.y)
 		{
-			transform.position = Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
-		}
-		else if(distancefromplayer <= shootingRange)
-		{
-			Instantiate(Bullet, bulletParent.transform.position, Quaternion.identity);
+			DestroyProjectile(); 
 		}
     }
 
-	private void OnDrawGizmosSelected()
-	{
-		Gizmos.color = Color.green;
-		Gizmos.DrawWireSphere(transform.position, lineOfSite);
-		Gizmos.DrawWireSphere(transform.position, shootingRange);
-	}
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.CompareTag("Player"))
+		{
+			DestroyProjectile();
+		}
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            Health health = collision.transform.GetComponent<Health>();
+            if (health != null)
+            {
+                health.TakeDamage(damage);
+                DestroyProjectile();
+            }
+        }
+    }
+
+    private void DestroyProjectile()
+    {
+		Destroy(gameObject); 
+    }
+
 }

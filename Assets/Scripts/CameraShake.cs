@@ -41,11 +41,6 @@ public class CameraShake : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-        //    ShakeCamera();
-        //}
-
         if (timer > 0)
         {
             timer -= Time.deltaTime;
