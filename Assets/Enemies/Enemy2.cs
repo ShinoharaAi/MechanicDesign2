@@ -15,6 +15,8 @@ public class Enemy2 : MonoBehaviour
     private float timebetweenshots;
     private Transform Player;
 
+    Coroutine c_REnemyFire;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,13 +39,26 @@ public class Enemy2 : MonoBehaviour
             timebetweenshots -= Time.deltaTime;
         }
 
-        if (starttimebetweenshots <= distance)
+        if (starttimebetweenshots >= distance)
         {
-            Instantiate(projectile, transform.position, Quaternion.identity);
-            timebetweenshots = starttimebetweenshots;
+            //Instantiate(projectile, transform.position, Quaternion.identity);
+            if(c_REnemyFire == null)
+            {
+                c_REnemyFire = StartCoroutine(C_EnemyFire());
+                timebetweenshots = starttimebetweenshots;
+
+            }
         }
 
     }
+
+    IEnumerator C_EnemyFire ()
+    {
+        Instantiate(projectile, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(1f);
+        c_REnemyFire = null;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

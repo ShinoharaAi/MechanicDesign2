@@ -49,7 +49,6 @@ public class PlayerMovement : MonoBehaviour
 
 	public void FixedUpdate()
 	{
-
 		if (m_rb.velocity.y < 0)
 		{
 			m_rb.velocity += Vector2.up * Physics2D.gravity.y * (FallApex - 1) * Time.deltaTime;
@@ -70,35 +69,6 @@ public class PlayerMovement : MonoBehaviour
 	//{
 	//	//isGrounded = Physics2D.CircleCast(m_CastPosition.position, m_f_CircleRadius, Vector2.zero, 0, m_LayerMask);
 	//}
-
-	public void PlayerJump()
-	{
-		if (GroundedScr.IsGrounded)
-		{
-			if (!m_bJumpBuffering && !m_bRecentJump)
-			{
-				Debug.Log("Jump");
-				Jump();
-			}
-		}
-		else if (m_bCoyoteTime)
-		{
-			Debug.Log("JumpCoyote");
-			Jump();
-			StopCoroutine(CoyoteTimeCounter);
-			m_bCoyoteTime = false;
-		}
-		else
-		{
-			if (m_bJumpBuffering)
-			{
-				StopCoroutine(JumpBufferingCounter);
-			}
-
-			JumpBufferingCounter = StartCoroutine(CR_JumpBuffering());
-		}
-
-	}
 
 	private void Handle_GroundedChanged(bool grounded)
 	{
@@ -123,16 +93,39 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
-	public void Jump()
+    public void PlayerJump()
+    {
+        if (GroundedScr.IsGrounded)
+        {
+            if (!m_bJumpBuffering && !m_bRecentJump)
+            {
+                Debug.Log("Jump");
+                Jump();
+            }
+        }
+        else if (m_bCoyoteTime)
+        {
+            Debug.Log("JumpCoyote");
+            Jump();
+            StopCoroutine(CoyoteTimeCounter);
+            m_bCoyoteTime = false;
+        }
+        else
+        {
+            if (m_bJumpBuffering)
+            {
+                StopCoroutine(JumpBufferingCounter);
+            }
+
+            JumpBufferingCounter = StartCoroutine(CR_JumpBuffering());
+        }
+    }
+
+    public void Jump()
 	{
 		m_rb.AddForce(Vector2.up * m_f_JumpForce, ForceMode2D.Impulse);
 		StartCoroutine(CR_JumpBlindness());
 		Debug.Log($"Launching from : {m_rb.velocity.y}");
-	}
-
-	public void Dasher()
-	{
-		StartCoroutine(Dash()); 
 	}
 
 	public void Move(float moveRequest)
@@ -142,7 +135,27 @@ public class PlayerMovement : MonoBehaviour
 		m_rb.AddForce(transform.right * m_f_MoveRequest * m_f_MoveSpeed * 0.1f, ForceMode2D.Impulse); 
 	}
 
-	IEnumerator CR_CoyoteTime()
+    public void Dasher()
+    {
+        StartCoroutine(C_Dash());
+    }
+
+
+    IEnumerator C_Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = m_rb.gravityScale;
+        m_rb.gravityScale = 0f;
+        m_rb.velocity = new Vector2(transform.localScale.x * m_f_MoveRequest * dashingPower, 0f);
+        yield return new WaitForSeconds(dashingTime);
+        m_rb.gravityScale = originalGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
+    }
+
+    IEnumerator CR_CoyoteTime()
 	{
 		m_bCoyoteTime = true;
 		yield return new WaitForSeconds(0.5f);
@@ -161,19 +174,5 @@ public class PlayerMovement : MonoBehaviour
 		m_bRecentJump = true;
 		yield return new WaitForSeconds(0.1f);
 		m_bRecentJump = false;
-	}
-
-	IEnumerator Dash()
-	{
-		canDash = false;
-		isDashing = true;
-		float originalGravity = m_rb.gravityScale;
-		m_rb.gravityScale = 0f;
-		m_rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
-		yield return new WaitForSeconds(dashingTime);
-		m_rb.gravityScale = originalGravity;
-		isDashing = false;
-		yield return new WaitForSeconds(dashingCooldown);
-		canDash = true;
 	}
 }

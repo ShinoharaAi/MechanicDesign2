@@ -66,7 +66,7 @@ Transform:
   m_Children:
   - {fileID: 8215493501597011915}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8059195385367839827
 SpriteRenderer:
@@ -129,7 +129,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 5055123564853936228}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 537735ee0c1cea44893c26770da9038a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -152,7 +152,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.000000029802322}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -191,7 +191,7 @@ Rigidbody2D:
   m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 7
+  m_Constraints: 4
 --- !u!114 &6859632384978346261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,9 +219,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d674ede465b5f814fb545e03607511d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 3235321331712974540, guid: b9e1da184647ca147b3982e8dc417088, type: 3}
   speed: 4
   distancebetween: 10
   retreatdistance: 10
   starttimebetweenshots: 2
   projectile: {fileID: 7523930200609236974, guid: 8ccd1a9aef711ce439129deb075ef342, type: 3}
+  enemyspawn: {fileID: 8594819241526070904, guid: 97dfb808fd1402e418a5c16df1d670bd, type: 3}

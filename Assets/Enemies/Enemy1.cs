@@ -12,8 +12,9 @@ public class Enemy1 : MonoBehaviour
     private Transform Player;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
 
     }
 

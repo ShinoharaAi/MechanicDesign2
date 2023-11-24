@@ -28,12 +28,14 @@ public class BulletScript : MonoBehaviour
 		if (collision.gameObject.tag == "Enemy")
 		{
 			Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            Vector2 enemyPosition = enemy.transform.position;
+
             if (enemy != null)
             {
 				enemy.GetComponent<Enemy>().TakeDamage(damage);
                 CameraShake.instance.ShakeCamera();
-
             }
+			enemy.transform.position = enemyPosition;
         }
 
 		StartCoroutine(C_BulletDisappear());

@@ -9,7 +9,9 @@ public class AIChase : MonoBehaviour
 	[SerializeField] float distancebetween;
     [SerializeField] float retreatdistance;
     [SerializeField] float starttimebetweenshots;
-    [SerializeField] GameObject projectile; 
+    [SerializeField] GameObject projectile;
+    [SerializeField] GameObject enemyspawn;
+
 
     private float distance;
     private float timebetweenshots;
@@ -44,6 +46,8 @@ public class AIChase : MonoBehaviour
         if(timebetweenshots <= 0)
         {
             Instantiate(projectile, transform.position, Quaternion.identity);
+            Instantiate(enemyspawn, transform.position, Quaternion.identity);
+
             timebetweenshots = starttimebetweenshots; 
         }
         else
