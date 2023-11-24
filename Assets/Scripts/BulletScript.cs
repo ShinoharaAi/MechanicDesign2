@@ -44,7 +44,7 @@ public class BulletScript : MonoBehaviour
 
 	IEnumerator C_BulletDisappear()
 	{
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(0.01f);
 		Destroy(gameObject);
 	}
 }
