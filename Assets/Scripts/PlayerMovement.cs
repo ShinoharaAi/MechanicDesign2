@@ -16,13 +16,8 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] float dashingTime = 0.2f;
 	[SerializeField] float dashingCooldown = 1f;
 
-	private AudioSource SFX;
-	[SerializeField] AudioClip jumpSFX;
 
-
-
-
-    private float FallApex = 2.5f;
+	private float FallApex = 2.5f;
 	//private float LowApex = 2f;
 
 	float jumpTime;
@@ -50,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
 	{
 		m_rb = GetComponent<Rigidbody2D>();
 		GroundedScr = GetComponent<Grounded>();
-		SFX = GetComponent<AudioSource>();
 	}
 
 	public void FixedUpdate()
@@ -129,7 +123,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
 	{
-		SFX.PlayOneShot(jumpSFX, 1f);
 		m_rb.AddForce(Vector2.up * m_f_JumpForce, ForceMode2D.Impulse);
 		StartCoroutine(CR_JumpBlindness());
 		Debug.Log($"Launching from : {m_rb.velocity.y}");
