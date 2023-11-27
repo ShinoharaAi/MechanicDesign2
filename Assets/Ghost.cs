@@ -11,28 +11,28 @@ public class Ghost : MonoBehaviour
 
 	private float ghostDelaySeconds;
 
-    void Start()
+    InputHandler InputHandler;
+
+    void Awake()
     {
+        InputHandler = GetComponent<InputHandler>();
 		ghostDelaySeconds = ghostDelay;
     }
 
-    void Update()
+    private void Update()
     {
-		if (makeGhost)
-		{
-			if (ghostDelaySeconds > 0)
-			{
-				ghostDelaySeconds -= Time.deltaTime;
-			}
-			else
-			{
-				GameObject currentGhost = Instantiate(ghost, transform.position, transform.rotation);
-				Sprite currentSprite = GetComponent<SpriteRenderer>().sprite;
-				currentGhost.transform.localScale = this.transform.localScale; 
-				currentGhost.GetComponent<SpriteRenderer>().sprite = currentSprite;
-				ghostDelaySeconds = ghostDelay;
-				Destroy(currentGhost, 0.5f);
-			}
-		}
+        if (ghostDelaySeconds > 0)
+        {
+            ghostDelaySeconds -= Time.deltaTime;
+        }
+        else if (makeGhost && InputHandler.m_b_InSlowMoActive)
+        {
+            GameObject currentGhost = Instantiate(ghost, transform.position, transform.rotation);
+            Sprite currentSprite = GetComponent<SpriteRenderer>().sprite;
+            currentGhost.transform.localScale = this.transform.localScale;
+            currentGhost.GetComponent<SpriteRenderer>().sprite = currentSprite;
+            ghostDelaySeconds = ghostDelay;
+            Destroy(currentGhost, 0.5f);
+        }
     }
 }
