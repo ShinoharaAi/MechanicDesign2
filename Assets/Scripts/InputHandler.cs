@@ -12,6 +12,7 @@ public class InputHandler : MonoBehaviour
     public bool m_b_InMoveActive;
 	private float m_f_InMoveRequest;
 	public bool m_b_InSlideActive;
+    public bool m_b_InSlowMoActive;
 
 	public Animator animator; 
 
@@ -30,6 +31,7 @@ public class InputHandler : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         PlayerMovement = GetComponent<PlayerMovement>();
         m_PlayerInput = GetComponent<PlayerInput>();
+        ghost = GetComponent<Ghost>();
     }
 
     private void OnEnable()
@@ -86,9 +88,6 @@ public class InputHandler : MonoBehaviour
         {
             c_RMove = StartCoroutine(C_MoveUpdate());
         }
-
-		ghost.makeGhost = true;
-		animator.SetBool("Moving", true);
 	}
 
     private void Handle_MoveCancelled(InputAction.CallbackContext context)
@@ -103,9 +102,6 @@ public class InputHandler : MonoBehaviour
         }
 
 		PlayerMovement.Move(m_f_InMoveRequest);
-
-		ghost.makeGhost = false;
-		animator.SetBool("Moving", false);
 	}
 
 	private void Handle_SlidePerformed(InputAction.CallbackContext context)
@@ -130,21 +126,19 @@ public class InputHandler : MonoBehaviour
 	}
     private void Handle_SlowMotionPerformed(InputAction.CallbackContext context)
     {
+        m_b_InSlowMoActive = true;
         Debug.Log("slowmo STARTED");
         if (c_RSlomo == null)
         {
             c_RSlomo = StartCoroutine(C_SlowMotion());
+            ghost.makeGhost = true;
+            // animator.SetBool("SlowMotion", true);
         }
     }
 
     private void Handle_SlowMotionCancelled(InputAction.CallbackContext context)
     {
-        if (c_RSlomo != null)
-        {
-            StopCoroutine(C_SlowMotion());
-            c_RSlomo = null;
-            Debug.Log("Slowo CR stopped");
-        }
+
     }
 
     private void Handle_JumpPerformed(InputAction.CallbackContext context)
@@ -194,7 +188,10 @@ public class InputHandler : MonoBehaviour
     IEnumerator C_SlowMotion()
     {
         Time.timeScale = 0.5f;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         Time.timeScale = 1.0f;
+        m_b_InSlowMoActive = false;
+        ghost.makeGhost = false;
+        c_RSlomo = null;
     }
 }
