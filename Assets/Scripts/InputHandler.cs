@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] PlayerInput m_PlayerInput;
-	[SerializeField] Shooting shooter; 
+	[SerializeField] Shooting shooter;
+    [SerializeField] private AudioSource shootSoundEffect;
 
     public bool m_b_InJumpActive;
     public bool m_b_InMoveActive;
@@ -116,7 +117,8 @@ public class InputHandler : MonoBehaviour
 
 	private void Handle_ShootPerformed(InputAction.CallbackContext context)
 	{
-		shooter.isShooting = true;
+		shootSoundEffect.Play();
+        shooter.isShooting = true;
 		shooter.Shoot();
 	}
 
