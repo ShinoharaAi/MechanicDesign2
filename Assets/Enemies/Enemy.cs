@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 	[SerializeField] int damage;
 	[SerializeField] float maxHealth = 100;
 	[SerializeField] float currentHealth;
+	[SerializeField] private AudioSource deathSoundEffect;
 
 	void Start()
 	{
@@ -20,7 +21,7 @@ public class Enemy : MonoBehaviour
 		{
 			Destroy(this.gameObject);
 		}
-	}
+    }
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
@@ -29,9 +30,11 @@ public class Enemy : MonoBehaviour
 			Health health = collision.transform.GetComponent<Health>();
             if (health != null)
             {
-				health.TakeDamage(damage); 
+				health.TakeDamage(damage);
             }
 		}
-	}
+
+        deathSoundEffect.Play();
+    }
 
 }

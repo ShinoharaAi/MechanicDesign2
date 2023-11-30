@@ -11,7 +11,7 @@ public class AIChase : MonoBehaviour
     [SerializeField] float starttimebetweenshots;
     [SerializeField] GameObject projectile;
     [SerializeField] GameObject enemyspawn;
-
+    [SerializeField] private AudioSource shootSoundEffect; 
 
     private float distance;
     private float timebetweenshots;
@@ -45,6 +45,7 @@ public class AIChase : MonoBehaviour
 
         if(timebetweenshots <= 0)
         {
+            shootSoundEffect.Play();    
             Instantiate(projectile, transform.position, Quaternion.identity);
             Instantiate(enemyspawn, transform.position, Quaternion.identity);
 
